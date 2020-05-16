@@ -3,6 +3,31 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const Autofix = require('autoprefixer')
+
+const cssLoaders = () => {
+    return [
+        {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                // hmr: isDev,
+                reloadAll: true
+            },
+        },
+        'css-loader',
+        {
+            loader: 'postcss-loader',
+            options: {
+                plugins: [
+                    Autofix({
+                        grid: 'autoplace'
+                    })
+                ],
+                sourceMap: true
+            }
+        }
+    ]
+}
 
 module.exports = {
     context: path.resolve(__dirname, 'src'),
@@ -33,5 +58,24 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'bundle.[hash].css'
         })
-    ]
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: cssLoaders()
+            },
+            {
+                test: /\.s[ac]ss$/,
+                use: [...cssLoaders(),
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                ]
+            },
+        ]
+    }
 }
