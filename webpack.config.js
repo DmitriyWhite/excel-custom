@@ -4,6 +4,13 @@ const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Autofix = require('autoprefixer')
+const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+
+const isDev = process.env.NODE_ENV === 'development'
+const isProd = !isDev
+
+const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`
 
 const cssLoaders = () => {
     return [
@@ -13,6 +20,9 @@ const cssLoaders = () => {
                 hmr: isDev,
                 reloadAll: true
             },
+        },
+        {
+            loader: 'cache-loader'
         },
         {
             loader: 'css-loader',
@@ -34,10 +44,38 @@ const cssLoaders = () => {
     ]
 }
 
+const optimization = () => {
+    const config = {
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                }
+            }
+        },
+        moduleIds: 'hashed',
+        runtimeChunk: 'single',
+    }
+
+    if (isProd) {
+        config.minimizer = [
+            new OptimizeCssAssetWebpackPlugin(),
+            new TerserWebpackPlugin()
+        ]
+    }
+
+    return config
+}
+
 module.exports = {
     context: path.resolve(__dirname, 'src'),
     mode: 'development',
-    entry: './index.js',
+    entry: {
+        main: ['@babel/polyfill', './app.js']
+    },
     output: {
         filename: filename('js'),
         path: path.resolve(__dirname, 'dist')
@@ -54,7 +92,8 @@ module.exports = {
         new HTMLWebpackPlugin({
             template: './index.html',
             minify: {
-                collapseWhitespace: isProd
+                collapseWhitespace: isProd,
+                removeComments: isProd
             }
         }),
         new CopyPlugin({
@@ -69,11 +108,13 @@ module.exports = {
             filename: filename('css'),
         })
     ],
+    optimization: optimization(),
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         port: 9000,
         hot: isDev
     },
+    devtool: isDev ? 'source-map' : false,
     module: {
         rules: [
             {
@@ -98,6 +139,7 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/,
+                include: path.resolve(__dirname, 'src'),
                 use: [...cssLoaders(),
                     {
                         loader: 'sass-loader',
