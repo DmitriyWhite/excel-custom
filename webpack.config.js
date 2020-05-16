@@ -1,5 +1,5 @@
 const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -10,11 +10,16 @@ const cssLoaders = () => {
         {
             loader: MiniCssExtractPlugin.loader,
             options: {
-                // hmr: isDev,
+                hmr: isDev,
                 reloadAll: true
             },
         },
-        'css-loader',
+        {
+            loader: 'css-loader',
+            options: {
+                sourceMap: isDev,
+            },
+        },
         {
             loader: 'postcss-loader',
             options: {
@@ -23,7 +28,7 @@ const cssLoaders = () => {
                         grid: 'autoplace'
                     })
                 ],
-                sourceMap: true
+                sourceMap: isDev
             }
         }
     ]
@@ -34,7 +39,7 @@ module.exports = {
     mode: 'development',
     entry: './index.js',
     output: {
-        filename: 'bundle.[hash].js',
+        filename: filename('js'),
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {
@@ -47,16 +52,21 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new HTMLWebpackPlugin({
-            template: 'index.html'
-        }),
-        new CopyPlugin([
-            {
-                from: path.resolve(__dirname, 'src/favicon.ico'),
-                to: path.resolve(__dirname, 'dist')
+            template: './index.html',
+            minify: {
+                collapseWhitespace: isProd
             }
-        ]),
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/favicon.ico'),
+                    to: path.resolve(__dirname, 'dist')
+                }
+            ]
+        }),
         new MiniCssExtractPlugin({
-            filename: 'bundle.[hash].css'
+            filename: filename('css'),
         })
     ],
     module: {
@@ -71,7 +81,7 @@ module.exports = {
                     {
                         loader: 'sass-loader',
                         options: {
-                            sourceMap: true
+                            sourceMap: isDev
                         }
                     }
                 ]
