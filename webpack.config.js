@@ -3,14 +3,40 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const Autofix = require('autoprefixer')
-const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const autofix = require('autoprefixer')
+const OptimizeCssAssetPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = !isDev
 
 const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`
+
+const jsLoaders = () => {
+    const loaders = [
+        {
+            loader: 'cache-loader'
+        },
+        {
+            loader: 'babel-loader',
+            options: {
+                presets: [
+                    '@babel/preset-env'
+                ],
+                plugins: [
+                    '@babel/plugin-proposal-class-properties',
+                    '@babel/plugin-proposal-private-methods'
+                ]
+            }
+        }
+    ]
+
+    if (isDev) {
+        loaders.push('eslint-loader')
+    }
+
+    return loaders
+}
 
 const cssLoaders = () => {
     return [
@@ -34,7 +60,7 @@ const cssLoaders = () => {
             loader: 'postcss-loader',
             options: {
                 plugins: [
-                    Autofix({
+                    autofix({
                         grid: 'autoplace'
                     })
                 ],
@@ -62,7 +88,7 @@ const optimization = () => {
 
     if (isProd) {
         config.minimizer = [
-            new OptimizeCssAssetWebpackPlugin(),
+            new OptimizeCssAssetPlugin(),
             new TerserWebpackPlugin()
         ]
     }
@@ -120,18 +146,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: [{
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            '@babel/preset-env'
-                        ],
-                        plugins: [
-                            '@babel/plugin-proposal-class-properties',
-                            '@babel/plugin-proposal-private-methods'
-                        ]
-                    }
-                }]
+                include: path.resolve(__dirname, 'src'),
+                use: jsLoaders()
             },
             {
                 test: /\.css$/,
