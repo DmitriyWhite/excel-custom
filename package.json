@@ -1,0 +1,30 @@
+{
+  "name": "excel-custom",
+  "version": "1.0.0",
+  "description": "Excel at JavaScript native",
+  "private": true,
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "prod": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitriyWhite/excel-custom.git"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "excel"
+  ],
+  "author": "Dmitriy Sidorov <dmitriywhitex@ya.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitriyWhite/excel-custom/issues"
+  },
+  "homepage": "https://github.com/DmitriyWhite/excel-custom#readme",
+  "devDependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
