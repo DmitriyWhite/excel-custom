@@ -162,6 +162,9 @@ module.exports = {
                         options: {
                             sourceMap: isDev
                         }
+                    },
+                    {
+                        loader: 'sass-bulk-import-loader'
                     }
                 ]
             },
