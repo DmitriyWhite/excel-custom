@@ -69,6 +69,11 @@ module.exports = {
             filename: filename('css'),
         })
     ],
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        port: 9000,
+        hot: isDev
+    },
     module: {
         rules: [
             {
