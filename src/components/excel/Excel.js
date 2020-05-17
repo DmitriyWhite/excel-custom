@@ -2,7 +2,7 @@ import {$} from '@core/Dom';
 
 export class Excel {
     constructor(selector, option) {
-        this.$el = document.querySelector(selector)
+        this.$element = $(selector)
         this.components = option.components || []
     }
 
@@ -12,7 +12,7 @@ export class Excel {
         this.components.forEach(Component => {
             const $el = $.create('div', Component.className)
             const component = new Component($el)
-            $el.innerHTML = component.toHTML()
+            $el.html(component.toHTML())
             $root.append($el)
         })
 
@@ -20,6 +20,6 @@ export class Excel {
     }
 
     render() {
-        this.$el.append(this.getRoot())
+        this.$element.append(this.getRoot())
     }
 }
