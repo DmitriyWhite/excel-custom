@@ -3,6 +3,13 @@ import {ExcelComponent} from '@core/ExcelComponent';
 export class ExcelFormula extends ExcelComponent {
     static className = 'excel-formula'
 
+    constructor($root, options) {
+        super($root, {
+            name: 'Formula',
+            listeners: ['input']
+        });
+    }
+
     toHTML() {
         // language=HTML
         return `
