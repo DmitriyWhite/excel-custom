@@ -19,6 +19,10 @@
     "comma-dangle": [
       "error",
       "only-multiline"
-    ]
+    ],
+    "require-jsdoc": "off",
+    "max-len": "off",
+    "operator-linebreak": "off",
+    "no-debugger": "off"
   }
 }
