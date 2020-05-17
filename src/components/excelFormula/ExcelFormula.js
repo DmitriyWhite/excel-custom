@@ -19,7 +19,7 @@ export class ExcelFormula extends ExcelComponent {
     }
 
     onInput(event) {
-        console.log(event)
+        console.log(event, event.target.textContent.trim() === 'done')
     }
 
     onClick(event) {
