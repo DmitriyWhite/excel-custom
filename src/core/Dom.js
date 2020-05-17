@@ -30,7 +30,8 @@ class Dom {
         }
     }
 
-    on() {
+    on(eventType, callback) {
+        this.$element.addEventListener(eventType, callback)
     }
 }
 
