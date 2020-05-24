@@ -29,17 +29,26 @@ export class ExcelTable extends ExcelComponent {
                 if (dataResize === 'col') {
                     const delta = e.pageX - coords.right
                     value = coords.width + delta
-                    $parent.css({width: value + 'px'})
+                    $resizer.css({right: -delta + 'px'})
                 } else if (dataResize === 'row') {
                     const delta = e.pageY - coords.bottom
                     value = coords.height + delta
-                    $parent.css({height: value + 'px'})
+                    $resizer.css({bottom: -delta + 'px'})
                 }
             }
 
             document.onmouseup = () => {
-                $cellAll.forEach(item => item.style.width = value + 'px')
+                if (dataResize === 'col') {
+                    $parent.css({width: value + 'px'})
+                    $cellAll.forEach(item => item.style.width = value + 'px')
+                    $resizer.css({right: null})
+                } else if (dataResize === 'row') {
+                    $parent.css({height: value + 'px'})
+                    $resizer.css({bottom: null})
+                }
+
                 document.onmousemove = null
+                document.onmouseup = null
             }
         }
     }
