@@ -3,9 +3,9 @@ const CODES = {
     Z: 90
 }
 
-function toCell() {
+function toCell(col) {
     // language=HTML
-    return `<div class="excel-table__cell" contenteditable></div>`
+    return `<div class="excel-table__cell" data-cell-column="col-${col}" contenteditable></div>`
 }
 
 function toColumn(col) {
@@ -19,10 +19,10 @@ function toColumn(col) {
 }
 
 function createRow(content = '', rowNumber = '') {
-    const resize = rowNumber ? '<div class="excel-table__row-resize"></div>' : ''
+    const resize = rowNumber ? '<div class="excel-table__row-resize" data-resize="row"></div>' : ''
     // language=HTML
     return `
-        <div class="excel-table__row">
+        <div class="excel-table__row" ${rowNumber ? `data-row="row-${rowNumber}" data-type="resizable"` : ''}>
             <div class="excel-table__row-info">
                 ${rowNumber}
                 ${resize}
@@ -49,7 +49,7 @@ export function createTable(rowsCount = 15) {
     rows.push(createRow(cols))
 
     for (let i = 1; i <= rowsCount; i++) {
-        const cell = new Array(colsCount).fill('').map(toCell).join('')
+        const cell = new Array(colsCount).fill('').map(toChar).map(toCell).join('')
         rows.push(createRow(cell, i))
     }
 

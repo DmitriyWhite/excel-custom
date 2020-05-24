@@ -24,11 +24,18 @@ export class ExcelTable extends ExcelComponent {
             const coords = $parent.getCoords()
 
             document.onmousemove = e => {
-
+                if (dataResize === 'col') {
                     const delta = e.pageX - coords.right
                     const value = coords.width + delta
                     $parent.$element.style.width = value + 'px'
 
+                    const $cell = document.querySelectorAll(`[data-cell-column="${$parent.$element.dataset.column}"]`)
+                    $cell.forEach(item => item.style.width = value + 'px')
+                } else if (dataResize === 'row') {
+                    const delta = e.pageY - coords.bottom
+                    const value = coords.height + delta
+                    $parent.$element.style.height = value + 'px'
+                }
             }
 
             document.onmouseup = () => {
