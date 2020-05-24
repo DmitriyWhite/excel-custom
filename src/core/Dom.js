@@ -30,6 +30,10 @@ class Dom {
         }
     }
 
+    get data() {
+        return this.$element.dataset
+    }
+
     on(eventType, callback) {
         this.$element.addEventListener(eventType, callback)
     }
@@ -44,6 +48,10 @@ class Dom {
 
     getCoords() {
         return this.$element.getBoundingClientRect()
+    }
+
+    findAll(selector) {
+        return this.$element.querySelectorAll(selector)
     }
 }
 

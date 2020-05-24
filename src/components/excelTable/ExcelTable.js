@@ -22,23 +22,23 @@ export class ExcelTable extends ExcelComponent {
             const $resizer = $(event.target)
             const $parent = $resizer.closest('[data-type="resizable"]')
             const coords = $parent.getCoords()
+            const $cellAll = this.$root.findAll(`[data-cell-column="${$parent.data.column}"]`)
+            let value = 0
 
             document.onmousemove = e => {
                 if (dataResize === 'col') {
                     const delta = e.pageX - coords.right
-                    const value = coords.width + delta
+                    value = coords.width + delta
                     $parent.$element.style.width = value + 'px'
-
-                    const $cell = document.querySelectorAll(`[data-cell-column="${$parent.$element.dataset.column}"]`)
-                    $cell.forEach(item => item.style.width = value + 'px')
                 } else if (dataResize === 'row') {
                     const delta = e.pageY - coords.bottom
-                    const value = coords.height + delta
+                    value = coords.height + delta
                     $parent.$element.style.height = value + 'px'
                 }
             }
 
             document.onmouseup = () => {
+                $cellAll.forEach(item => item.style.width = value + 'px')
                 document.onmousemove = null
             }
         }
