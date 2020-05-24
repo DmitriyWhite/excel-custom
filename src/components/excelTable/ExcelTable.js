@@ -29,11 +29,11 @@ export class ExcelTable extends ExcelComponent {
                 if (dataResize === 'col') {
                     const delta = e.pageX - coords.right
                     value = coords.width + delta
-                    $parent.$element.style.width = value + 'px'
+                    $parent.css({width: value + 'px'})
                 } else if (dataResize === 'row') {
                     const delta = e.pageY - coords.bottom
                     value = coords.height + delta
-                    $parent.$element.style.height = value + 'px'
+                    $parent.css({height: value + 'px'})
                 }
             }
 
