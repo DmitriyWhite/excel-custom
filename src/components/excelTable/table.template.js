@@ -4,18 +4,29 @@ const CODES = {
 }
 
 function toCell() {
+    // language=HTML
     return `<div class="excel-table__cell" contenteditable></div>`
 }
 
 function toColumn(col) {
-    return `<div class="excel-table__column">${col}</div>`
+    // language=HTML
+    return `
+        <div class="excel-table__column">
+            ${col}
+            <div class="excel-table__col-resize"></div>
+        </div>
+    `
 }
 
 function createRow(content = '', rowNumber = '') {
+    const resize = rowNumber ? '<div class="excel-table__row-resize"></div>' : ''
     // language=HTML
     return `
         <div class="excel-table__row">
-            <div class="excel-table__row-info">${rowNumber}</div>
+            <div class="excel-table__row-info">
+                ${rowNumber}
+                ${resize}
+            </div>
             <div class="excel-table__row-data">${content}</div>
         </div>
         `
